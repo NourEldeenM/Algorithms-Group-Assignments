@@ -31,6 +31,17 @@ public:
     int peek();
     int pop_max();
     int get_min();
+    int size();
+};
+
+class priorityQueue
+{
+private:
+    maxHeap heap;
+public:
+    void push(int element);
+    int pop();
+    int size();
 };
 
 #endif

@@ -112,3 +112,21 @@ int maxHeap::get_min()
         smallest = array[i] < smallest ? array[i] : smallest;
     return smallest;
 }
+
+int maxHeap::size()
+{
+    return array.size() - 1;
+}
+
+int priorityQueue::size()
+{
+    return heap.size();
+}
+int priorityQueue::pop()
+{
+    return heap.pop_max();
+}
+void priorityQueue::push(int element)
+{
+    return heap.insertElement(element);
+}
