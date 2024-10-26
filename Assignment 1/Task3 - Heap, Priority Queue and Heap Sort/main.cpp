@@ -6,6 +6,8 @@ using namespace std;
 
 int main()
 {
+    cout << "\n################Heap Testing####################\n";
+
     maxHeap heap;
     // Test insertElement and peek
     heap.insertElement(10);
@@ -24,7 +26,7 @@ int main()
     cout << "Smallest: " << heap.get_min() << endl;
     cout << "Peek after pop: " << heap.peek() << endl; // Should print -1 (empty heap)
 
-    cout << "#################################" << endl;
+    cout << "\n###############Priority Queue##################\n";
     priorityQueue pq;
     // Insert elements into the priority queue
     pq.push(20);
@@ -40,5 +42,24 @@ int main()
         cout << pq.pop() << " ";
     }
     cout << endl;
+
+    cout << "\n################Heap Sort####################\n";
+
+    vector<int> v = {5, 2, 4, 1, 77, 8, 2};
+    v = heapsortDesc(v);
+    cout << "Sorted Descending: ";
+    for (const int i : v) {
+        cout << i << ' ';
+    }
+    cout << endl;
+
+    v = heapsortAsc(v);
+    cout << "Sorted Ascending: ";
+    for (const int i : v)
+    {
+        cout << i << ' ';
+    }
+    cout << endl;
+
     return 0;
 }

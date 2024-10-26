@@ -126,7 +126,34 @@ int priorityQueue::pop()
 {
     return heap.pop_max();
 }
+
 void priorityQueue::push(int element)
 {
     return heap.insertElement(element);
+}
+
+vector<int> heapsortDesc(vector<int> arr) {
+    maxHeap heap;
+    for (int i = 0; i < arr.size(); i++) {
+        heap.insertElement(arr[i]);
+    }
+
+    vector<int> output;
+    while (heap.size() != 0) {
+        output.push_back(heap.peek());
+        heap.pop_max();
+    }
+
+    return output;
+}
+
+vector<int> heapsortAsc(vector<int> arr) {
+    vector<int> output, desc = heapsortDesc(arr);
+
+    while(desc.size() != 0) {
+        output.push_back(desc.back());
+        desc.pop_back();
+    }
+
+    return output;
 }
