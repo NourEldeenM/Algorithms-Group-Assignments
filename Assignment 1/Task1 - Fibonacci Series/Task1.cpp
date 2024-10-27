@@ -70,3 +70,13 @@ ll fibonacciDP(ll n){
         arr[i] = arr[i-1] + arr[i-2];
     return arr[n];
 }
+
+int main(){
+    ll n;
+    cout << "Enter the value of n: ";
+    cin >> n;
+    cout << "Fibonacci using Recursion: " << fibonacciRecursion(n) << endl;
+    cout << "Fibonacci using Matrix Exponentiation: " << fibonacciMatrix(n) << endl;
+    cout << "Fibonacci using Iteration: " << fibonacciDP(n) << endl;
+    return 0;
+}
