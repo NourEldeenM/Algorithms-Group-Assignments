@@ -175,78 +175,75 @@ private:
         while (deletedNode != root && deletedNode->color == BLACK) {
             if (deletedNode == deletedNode->parent->left) {
                 Node* sibling = deletedNode->parent->right;
+
+                // Case 1: Sibling is RED (Recolor and Rotate Left)
                 if (sibling != nullptr && sibling->color == RED) {
                     sibling->color = BLACK;
                     deletedNode->parent->color = RED;
                     leftRotation(deletedNode->parent);
                     sibling = deletedNode->parent->right;
                 }
+
+                // Case 2: Sibling's children are BLACK (Recolor Sibling)
                 if ((sibling->left == nullptr || sibling->left->color == BLACK) &&
                     (sibling->right == nullptr || sibling->right->color == BLACK)) {
                     if (sibling != nullptr) sibling->color = RED;
                     deletedNode = deletedNode->parent;
                 } else {
+                    // Case 3: Sibling's right child is BLACK (Recolor and Rotate Right on Sibling)
                     if (sibling->right == nullptr || sibling->right->color == BLACK) {
                         if (sibling->left != nullptr) sibling->left->color = BLACK;
                         sibling->color = RED;
                         rightRotation(sibling);
                         sibling = deletedNode->parent->right;
                     }
+
+                    // Case 4: Sibling's right child is RED (Recolor and Rotate Left on Parent)
                     sibling->color = deletedNode->parent->color;
                     deletedNode->parent->color = BLACK;
                     if (sibling->right != nullptr) sibling->right->color = BLACK;
                     leftRotation(deletedNode->parent);
-                    deletedNode = root;
+                    deletedNode = root; // Fix completed
                 }
             } else {
                 Node* sibling = deletedNode->parent->left;
+
+                // Case 1: Sibling is RED (Recolor and Rotate Right)
                 if (sibling != nullptr && sibling->color == RED) {
                     sibling->color = BLACK;
                     deletedNode->parent->color = RED;
                     rightRotation(deletedNode->parent);
                     sibling = deletedNode->parent->left;
                 }
+
+                // Case 2: Sibling's children are BLACK (Recolor Sibling)
                 if ((sibling->left == nullptr || sibling->left->color == BLACK) &&
                     (sibling->right == nullptr || sibling->right->color == BLACK)) {
                     if (sibling != nullptr) sibling->color = RED;
                     deletedNode = deletedNode->parent;
                 } else {
+                    // Case 3: Sibling's left child is BLACK (Recolor and Rotate Left on Sibling)
                     if (sibling->left == nullptr || sibling->left->color == BLACK) {
-                        if (sibling->right) sibling->right->color = BLACK;
+                        if (sibling->right != nullptr) sibling->right->color = BLACK;
                         sibling->color = RED;
                         leftRotation(sibling);
                         sibling = deletedNode->parent->left;
                     }
+
+                    // Case 4: Sibling's left child is RED (Recolor and Rotate Right on Parent)
                     sibling->color = deletedNode->parent->color;
                     deletedNode->parent->color = BLACK;
                     if (sibling->left != nullptr) sibling->left->color = BLACK;
                     rightRotation(deletedNode->parent);
-                    deletedNode = root;
+                    deletedNode = root; // Fix completed
                 }
             }
         }
+
+        // Ensure the deleted node is black before exiting
         deletedNode->color = BLACK;
     }
 
-    void printTree(Node *node, int indent = 0) const {
-        if (node != nullptr) {
-            if (node->right) {
-                printTree(node->right, indent + 4);
-            }
-            if (indent) {
-                cout << std::string(indent, ' ');
-            }
-            if (node->color == RED) {
-                cout << "(RED) ";
-            } else {
-                cout << "(BLK) ";
-            }
-            cout << node->data << endl;
-            if (node->left) {
-                printTree(node->left, indent + 4);
-            }
-        }
-    }
 
     void displayTree(Node* root, string indent, bool last)
     {
@@ -286,14 +283,6 @@ public:
         Node *node = deleteBST(root, data);
         fixDeleteRBT(root, node);
     }
-
-//    void displayTree() const {
-//        if (root == nullptr) {
-//            cout << "Tree is empty.\n";
-//            return;
-//        }
-//        displayTree(root);
-//    }
 
     void displayTree()
     {
