@@ -244,7 +244,6 @@ private:
         deletedNode->color = BLACK;
     }
 
-
     void displayTree(Node* root, string indent, bool last)
     {
         if (root != nullptr) {
