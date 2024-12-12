@@ -72,7 +72,7 @@ public:
         current = current->next[0];                         // move to the next node in level 0
         if (current != nullptr && current->data == element) // Avoid duplicates
         {
-            cout << "Node: " << element << " already exists.\n";
+            // cout << "Node: " << element << " already exists.\n";
             return;
         }
         Node *newNode = new Node(element, nodeLevel);
@@ -82,7 +82,7 @@ public:
             update[i]->next[i] = newNode;          // its previous node will point to the new node
         }
         nodeCount++;
-        cout << "Node: " << element << " added successfully\n";
+        // cout << "Node: " << element << " added successfully\n";
     }
 
     void display()
@@ -145,12 +145,32 @@ public:
             delete current;
             nodeCount--;
             maxLevel = calculateMaxLevel();
-            cout << "Element " << element << " deleted successfully.\n";
+            // cout << "Element " << element << " deleted successfully.\n";
         }
         else
         {
-            cout << "Element " << element << " not found.\n";
+            // cout << "Element " << element << " not found.\n";
         }
+    }
+
+    int getMax()
+    {
+        if (head == nullptr) // skiplist empty
+            return -1;
+
+        Node *current = head;
+        // Traverse each level starting from the highest level down to level 0
+        for (int i = maxLevel; i >= 0; i--)
+        {
+            // Move current node right as far as possible on this level
+            while (current->next[i] != nullptr)
+            {
+                current = current->next[i];
+            }
+        }
+
+        // After the loops, 'current' should be at the rightmost node on level 0
+        return current->data;
     }
 
     ~skipList()
@@ -165,23 +185,23 @@ public:
     }
 };
 
-int main()
-{
-    skipList SkipList;
+// int main()
+// {
+//     skipList SkipList;
 
-    SkipList.insert(2);
-    SkipList.insert(4);
-    SkipList.insert(1);
-    SkipList.insert(3);
-    SkipList.insert(5);
-    SkipList.insert(7);
+//     SkipList.insert(2);
+//     SkipList.insert(4);
+//     SkipList.insert(1);
+//     SkipList.insert(3);
+//     SkipList.insert(5);
+//     SkipList.insert(7);
 
-    SkipList.display();
+//     SkipList.display();
 
-    SkipList.search(99);
-    SkipList.search(8);
-    SkipList.remove(2);
-    SkipList.remove(7);
+//     SkipList.search(99);
+//     SkipList.search(8);
+//     SkipList.remove(2);
+//     SkipList.remove(7);
 
-    SkipList.display();
-}
+//     SkipList.display();
+// }
