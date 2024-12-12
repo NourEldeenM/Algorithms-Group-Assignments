@@ -1,123 +1,94 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
 
 using namespace std;
 
-const int maxNumberOfLevel = 5;
 class Node
 {
 public:
     int data;
     vector<Node *> next;
-    Node(int data, int Level) : data(data), next(Level + 1, nullptr) {}
+
+    Node(int data, int levels)
+    {
+        this->data = data;
+        next = vector<Node *>(levels + 1, nullptr);
+    }
 };
 
 class skipList
 {
 private:
     Node *head;
-    int Level;
+    int maxLevel;
+    int nodeCount;
+
+    int getRandomLevel()
+    {
+        int level = 0;
+        while (level < maxLevel && rand() % 2)
+            level++;
+        return level;
+    }
+
+    int calculateMaxLevel()
+    {
+        return (nodeCount > 0) ? log2(nodeCount) : 0;
+    }
 
 public:
     skipList()
     {
-        head = new Node(0, maxNumberOfLevel);
-        Level = 0;
+        head = new Node(0, 0);
+        maxLevel = 0;
+        nodeCount = 0;
+        srand(time(nullptr));
     }
 
-    void insert(int data)
+    void insert(int element)
     {
-        int newLevel = 0;
-        while (newLevel < maxNumberOfLevel and (rand() % 2) == 1)
-            newLevel++;
-
-        if (Level < newLevel)
+        int nodeLevel = getRandomLevel();      // get random level
+        int newMaxLevel = calculateMaxLevel(); // calculate maximum level based on number of nodes (log2(n))
+        if (newMaxLevel > maxLevel)            // if maximum level increases, adjust the head node, so that it is present in all levels
         {
-            head->next.resize(newLevel + 1, nullptr);
-            Level = newLevel;
+            head->next.resize(newMaxLevel + 1, nullptr);
+            maxLevel = newMaxLevel;
         }
 
+        // find the position to insert new node
         Node *current = head;
-        vector<Node *> Update(Level + 1, nullptr);
+        vector<Node *> update(maxLevel + 1, nullptr);
 
-        for (int i = Level; i >= 0; i--)
+        for (int i = maxLevel; i >= 0; i--)
         {
-            while (current->next[i] and current->next[i]->data < data)
+            while (current->next[i] != nullptr && current->next[i]->data < element)
                 current = current->next[i];
-            Update[i] = current;
+            update[i] = current; // insert the last node reached in level i to be updated later
         }
 
-        current = current->next[0];
-        if (current == nullptr or current->data != data)
+        current = current->next[0];                         // move to the next node in level 0
+        if (current != nullptr && current->data == element) // Avoid duplicates
         {
-            Node *newNode = new Node(data, Level);
-            for (int i = 0; i <= newLevel; i++)
-            {
-                newNode->next[i] = Update[i]->next[i];
-                Update[i]->next[i] = newNode;
-            }
-            cout << "Element " << data << " inserted successfully.\n";
+            cout << "Node: " << element << " already exists.\n";
+            return;
         }
-        else
-            cout << "Element " << data << " already exists.\n";
-    }
-
-    void remove(int data)
-    {
-        Node *current = head;
-        vector<Node *> Update(Level + 1, nullptr);
-        for (int i = Level; i >= 0; i--)
+        Node *newNode = new Node(element, nodeLevel);
+        for (int i = 0; i <= nodeLevel; i++)
         {
-            while (current->next[i] and current->next[i]->data < data)
-                current = current->next[i];
-            Update[i] = current;
+            newNode->next[i] = update[i]->next[i]; // newNode will point to its previous node
+            update[i]->next[i] = newNode;          // its previous node will point to the new node
         }
-
-        current = current->next[0];
-        if (current != nullptr and current->data == data)
-        {
-            for (int i = 0; i <= Level; i++)
-            {
-                if (Update[i]->next[i] != current)
-                    break;
-                else
-                    Update[i]->next[i] = current->next[i];
-            }
-
-            delete current;
-            while (Level > 0 and head->next[Level] == nullptr)
-                Level--;
-
-            cout << "Element " << data << " deleted successfully." << endl;
-        }
-        else
-            cout << "Element " << data << " not found." << endl;
-    }
-
-    bool search(int data)
-    {
-        Node *current = head;
-
-        for (int i = Level; i >= 0; i--)
-        {
-            while (current->next[i] && current->next[i]->data < data)
-                current = current->next[i];
-        }
-        current = current->next[0];
-        if (current != nullptr && current->data == data)
-        {
-            cout << "Element " << data << " found.\n";
-            return true;
-        }
-
-        cout << "Element " << data << " not found.\n";
-        return false;
+        nodeCount++;
+        cout << "Node: " << element << " added successfully\n";
     }
 
     void display()
     {
-
-        cout << "skip List:" << endl;
-        for (int i = Level; i >= 0; i--)
+        cout << "Skip List:" << endl;
+        for (int i = maxLevel - 1; i >= 0; i--)
         {
             Node *current = head->next[i];
             cout << "Level " << i << ": ";
@@ -129,27 +100,88 @@ public:
             cout << endl;
         }
     }
+
+    bool search(int element)
+    {
+        Node *current = head;
+
+        for (int i = maxLevel; i >= 0; i--)
+        {
+            while (current->next[i] && current->next[i]->data < element)
+                current = current->next[i];
+        }
+        current = current->next[0];
+        if (current != nullptr && current->data == element)
+        {
+            cout << "Element " << element << " found.\n";
+            return true;
+        }
+
+        cout << "Element " << element << " not found.\n";
+        return false;
+    }
+
+    void remove(int element)
+    {
+        Node *current = head;
+        vector<Node *> update(maxLevel + 1, nullptr);
+
+        for (int i = maxLevel; i >= 0; i--)
+        {
+            while (current->next[i] != nullptr && current->next[i]->data < element)
+                current = current->next[i];
+            update[i] = current;
+        }
+
+        current = current->next[0];
+        if (current != nullptr && current->data == element)
+        {
+            for (int i = 0; i <= maxLevel; i++)
+            {
+                if (update[i]->next[i] != current)
+                    break;
+                update[i]->next[i] = current->next[i];
+            }
+            delete current;
+            nodeCount--;
+            maxLevel = calculateMaxLevel();
+            cout << "Element " << element << " deleted successfully.\n";
+        }
+        else
+        {
+            cout << "Element " << element << " not found.\n";
+        }
+    }
+
+    ~skipList()
+    {
+        Node *current = head;
+        while (current)
+        {
+            Node *temp = current;
+            current = current->next[0];
+            delete temp;
+        }
+    }
 };
 
 int main()
 {
-
     skipList SkipList;
 
-    SkipList.insert(10);
-    SkipList.insert(20);
-    SkipList.insert(30);
-    SkipList.insert(40);
-    SkipList.insert(50);
+    SkipList.insert(2);
+    SkipList.insert(4);
+    SkipList.insert(1);
+    SkipList.insert(3);
+    SkipList.insert(5);
+    SkipList.insert(7);
 
     SkipList.display();
 
-    SkipList.search(20);
-    SkipList.search(40);
-
-    SkipList.remove(20);
-    SkipList.remove(40);
+    SkipList.search(99);
+    SkipList.search(8);
+    SkipList.remove(2);
+    SkipList.remove(7);
 
     SkipList.display();
-    return 0;
 }
