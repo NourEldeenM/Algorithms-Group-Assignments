@@ -1,6 +1,6 @@
 // Part 1: Dynamic Programming
 // Question: 3
-//
+// Knapsack Problem (0/1 Knapsack and Fractional Knapsack)
 
 #include <iostream>
 #include <vector>
