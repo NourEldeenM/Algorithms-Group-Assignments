@@ -73,7 +73,63 @@ Implement a Skip List data structure in C++ with the following functionalities:
 
 ---
 
+## Assignment 3: Dynamic Programming and Greedy Algorithms
+
+### Assignment Description
+
+#### Part 1: Dynamic Programming Problems
+
+1. **Fair Division of Coins**
+   - Problem: Given a set of coins, determine the most equitable division between two individuals such that the difference in total value is minimized.
+   - Approach: Use a variation of the **0/1 Knapsack Algorithm** to calculate the minimal difference.
+
+2. **Message Reconstruction**
+   - Problem: Calculate the number of possible original messages based on specific replacement rules in an erroneous message.
+   - Approach: Utilize **dynamic programming with modular arithmetic** to count valid combinations efficiently.
+
+3. **Maximum Value Robbery**
+   - Problem: Optimize the value of items stolen by considering weight constraints on a truck.
+   - Approach: Solve using the **Knapsack Algorithm** to maximize the total value within given weight limits.
+
+4. **Gold Retrieval from Sunken Treasures**
+   - Problem: Maximize the gold collected by a diver, considering time and depth constraints.
+   - Approach: Implement a **time-constrained knapsack algorithm** with depth-based constraints.
+
+5. **Longest Increasing Subsequence**
+   - Problem: Identify the length of the longest increasing subsequence in a given array.
+   - Approach: Use **dynamic programming** to compute the sequence efficiently.
+
+---
+
+#### Part 2: Greedy Algorithms
+
+1. **Cookie Distribution**
+   - Problem: Maximize the number of content children by distributing cookies based on greed factors.
+   - Approach: Sort children and cookies by size and greedily assign cookies to children with the smallest possible greed factor.
+
+2. **Task Scheduling with Cooling**
+   - Problem: Minimize the total intervals required to complete tasks while adhering to a cooling interval constraint.
+   - Approach: Use a **greedy scheduling algorithm** to optimize task execution order and idle times.
+
+3. **Valid Path in a Graph**
+   - Problem: Determine if a valid path exists between two vertices in a graph.
+   - Approach: Use a **union-find algorithm** or **breadth-first search (BFS)** for connectivity checks.
+
+4. **Minimum Cost for Safe Roads**
+   - Problem: Minimize the cost of a gift (in gold and silver coins) to ensure safe travel between all cities in a kingdom.
+   - Approach: Employ **Kruskal's Algorithm** for a minimum spanning tree considering weighted costs.
+
+5. **Sum of Minimum Distances**
+   - Problem: Calculate the sum of minimum distances between all pairs of cities in a graph with distinct edge weights.
+   - Approach: Utilize a **modified Floyd-Warshall Algorithm** or similar methods for shortest path calculations.
+
+### Folder Contents:
+- A C++ file for each problem, containing the code and implementation.
+
+---
+
 ### Team Members
 - **Yassin Ali** ([Yassin's GitHub](https://github.com/YassenAli))
 - **Youssef Abdul Moneim** ([Youssef's GitHub](https://github.com/youssefabdulmoneim))
 - **Nour Eldeen Mohamed** ([Nour's GitHub](https://github.com/NourEldeenM))
+- **Zeyad Mohamed** ([Zeyad's GitHub](https://github.com/ZeyadMohamed24))
