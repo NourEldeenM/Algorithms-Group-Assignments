@@ -132,3 +132,4 @@ Implement a Skip List data structure in C++ with the following functionalities:
 - **Yassin Ali** ([Yassin's GitHub](https://github.com/YassenAli))
 - **Youssef Abdul Moneim** ([Youssef's GitHub](https://github.com/youssefabdulmoneim))
 - **Nour Eldeen Mohamed** ([Nour's GitHub](https://github.com/NourEldeenM))
+- **Zeyad Mohamed** ([Zeyad's GitHub](https://github.com/ZeyadMohamed24))
