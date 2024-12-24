@@ -1,6 +1,6 @@
 // Part 2: Greedy algorithms and MST
 // Question: 1
-//
+// Approach: Sort children and cookies by size and greedily assign cookies to children with the smallest possible greed factor.
 #include <iostream>
 #include <vector>
 #include <algorithm>
