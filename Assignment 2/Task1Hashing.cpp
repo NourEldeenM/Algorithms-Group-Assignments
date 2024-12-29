@@ -42,13 +42,69 @@ int foldBoundaryMethod(int key, int n) {
 }
 ///////////////////////////////////////////////////////////////////////////
 
+struct Node {
+    int data;
+    Node *next;
+
+    Node(int value) : data(value), next(nullptr) {
+    }
+};
+
+class LinkedList {
+private:
+    Node *head;
+    Node *tail;
+
+public:
+    LinkedList() : head(nullptr), tail(nullptr) {
+    }
+
+    void insert(int val) {
+        Node *newNode = new Node(val);
+        if (tail == nullptr) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+
+    bool search(int value) {
+        Node *current = head;
+        while (current) {
+            if (current->data == value) {
+                return true;
+            }
+            current = current->next;
+        }
+        return false;
+    }
+
+    void print() const {
+        Node *current = head;
+        while (current) {
+            cout << current->data << " -> ";
+            current = current->next;
+        }
+        cout << "null" << '\n';
+    }
+
+    ~LinkedList() {
+        Node *current = head;
+        while (current) {
+            Node *nextNode = current->next;
+            delete current;
+            current = nextNode;
+        }
+    }
+};
+
 class HashTable {
 private:
     int n; //TableSize
     int greatestPrime; // First prime number smaller than table size
-
     // Chaining Method
-    vector<vector<int> > tableForChaining;
+    vector<LinkedList> tableForChaining;
     // Open Addressing and Double Hashing
     vector<int> tableForOpenAddressing;
 
@@ -86,38 +142,29 @@ public:
         tableForChaining.resize(n);
         tableForOpenAddressing.resize(n, -1);
         cout << "First prime number smaller than table size (" << n << ") is: "
-                << greatestPrime << '\n';
+                << greatestPrime << "\n\n";
     }
-
 
     void insertChaining(int key) {
         int index = hash1(key);
-        tableForChaining[index].push_back(key);
+        tableForChaining[index].insert(key);
         cout << "Inserted " << key << " into index: " << index << " using Chaining Method." << '\n';
     }
 
-
     bool searchChaining(int key) {
         int index = hash1(key);
-        for (int k: tableForChaining[index]) {
-            if (k == key) {
-                return true;
-            }
-        }
-        return false;
+        return tableForChaining[index].search(key);
     }
 
-    // Open Addressing: Linear Probing
     void insertOpenAddressingLinearProbing(int key) {
         int index = hash1(key);
         while (tableForOpenAddressing[index] != -1) {
             index = (index + 1) % n;
         }
         tableForOpenAddressing[index] = key;
-        cout << "Inserted " << key << " into index: " << index << " using Open Addressing Method." << '\n';
+        cout << "Inserted " << key << " into index: " << index << " using Open Addressing Linear Probing." << '\n';
     }
 
-    // Open Addressing: Quadratic Probing
     void insertOpenAddressingQuadraticProbing(int key) {
         int index = hash1(key);
         int i = 0;
@@ -125,14 +172,14 @@ public:
             i++;
             if (i == n) {
                 // Table is full
-                cout << "Hash table is full! Cannot insert " << key << '\n';
+                cout << "Hash table is full, cannot insert " << key << '\n';
                 return;
             }
         }
         tableForOpenAddressing[(index + i * i) % n] = key;
+        cout << "Inserted " << key << " into index: " << index << " using Open Addressing Quadratic Probing." << '\n';
     }
 
-    // Search using linear probing
     bool searchOpenAddressing(int key) {
         int index = hash1(key);
         while (tableForOpenAddressing[index] != -1) {
@@ -144,7 +191,6 @@ public:
         return false;
     }
 
-    // Search using quadratic probing
     bool searchQuadratic(int key) {
         int index = hash1(key);
         int i = 0;
@@ -157,7 +203,7 @@ public:
                 break;
             }
         }
-        return false; // Key not found
+        return false;
     }
 
     void insertDoubleHashing(int key) {
@@ -185,19 +231,15 @@ public:
         return false;
     }
 
-    void printChaining() {
+    void printChaining() const {
         cout << "Hash Table (Chaining Method):" << '\n';
         for (int i = 0; i < n; ++i) {
             cout << "Index: " << i << ": ";
-            for (int key: tableForChaining[i]) {
-                cout << key << " -> ";
-            }
-            cout << "null" << '\n';
+            tableForChaining[i].print();
         }
     }
 
-    void printOpenAddressing() {
-        cout << "Hash Table (Double Hashing Method):" << '\n';
+    void printOpenAddressing() const {
         for (int i = 0; i < n; ++i) {
             if (tableForOpenAddressing[i] != -1) {
                 cout << "Index: " << i << ": " << tableForOpenAddressing[i] << '\n';
@@ -205,6 +247,13 @@ public:
                 cout << "Index: " << i << ": Empty" << '\n';
             }
         }
+    }
+
+    void clear() {
+        for (auto &linkedList: tableForChaining) {
+            linkedList = LinkedList();
+        }
+        fill(tableForOpenAddressing.begin(), tableForOpenAddressing.end(), -1);
     }
 };
 
@@ -222,46 +271,49 @@ int main() {
     hashTable.insertChaining(25);
     hashTable.insertChaining(35);
     hashTable.insertChaining(40);
-    cout << "\n***********************************\n";
-    hashTable.insertOpenAddressingLinearProbing(10);
-    hashTable.insertOpenAddressingLinearProbing(20);
-    hashTable.insertOpenAddressingLinearProbing(30);
-
-    hashTable.insertDoubleHashing(15);
-    hashTable.insertDoubleHashing(25);
-    hashTable.insertDoubleHashing(35);
-    cout << "\n***********************************\n";
-
+    cout << '\n';
     hashTable.printChaining();
     cout << "\n***********************************\n";
-
-    hashTable.printOpenAddressing();
-    cout << "\n***********************************\n";
-
     if (hashTable.searchChaining(25)) {
         cout << "Key 25 found in Chaining method." << '\n';
     } else {
         cout << "Key 25 not found in Chaining method." << '\n';
     }
-
     cout << "\n***********************************\n";
-    if (hashTable.searchOpenAddressing(30)) {
-        cout << "Key 30 found in Open Addressing." << '\n';
+    hashTable.clear();
+    hashTable.insertOpenAddressingLinearProbing(10);
+    hashTable.insertOpenAddressingLinearProbing(20);
+    hashTable.insertOpenAddressingLinearProbing(30);
+    cout << "\nHash Table (Open Addressing Linear Probing):" << '\n';
+    hashTable.printOpenAddressing();
+    cout << "\n***********************************\n";
+    hashTable.clear();
+    hashTable.insertDoubleHashing(15);
+    hashTable.insertDoubleHashing(25);
+    hashTable.insertDoubleHashing(35);
+    cout << "\nHash Table (Open Addressing Double hashing):" << '\n';
+    hashTable.printOpenAddressing();
+    cout << "\n***********************************\n";
+    if (hashTable.searchDoubleHashing(35)) {
+        cout << "Key 35 found in Open Addressing Double Hashing." << '\n';
     } else {
-        cout << "Key 30 not found in Open Addressing." << '\n';
+        cout << "Key 35 not found in Open Addressing Double Hashing." << '\n';
     }
-
+    cout << "\n***********************************\n";
+    hashTable.clear();
     hashTable.insertOpenAddressingQuadraticProbing(10);
     hashTable.insertOpenAddressingQuadraticProbing(20);
     hashTable.insertOpenAddressingQuadraticProbing(15);
     hashTable.insertOpenAddressingQuadraticProbing(7);
     hashTable.insertOpenAddressingQuadraticProbing(30);
-
-    cout << "\n***********************************\n";
+    cout << "\nHash Table (Open Addressing Quadratic Probing):" << '\n';
     hashTable.printOpenAddressing();
 
     cout << "\n***********************************\n";
-    cout << "Search for 15: " << (hashTable.searchQuadratic(15) ? "Found" : "Not Found") << '\n';
-    cout << "Search for 25: " << (hashTable.searchQuadratic(25) ? "Found" : "Not Found") << '\n';
+    if (hashTable.searchQuadratic(15)) {
+        cout << "15 found in Open Addressing Quadratic Probing.\n";
+    } else {
+        cout << "15 not found in Open Addressing Quadratic Probing.\n";
+    }
     return 0;
 }
